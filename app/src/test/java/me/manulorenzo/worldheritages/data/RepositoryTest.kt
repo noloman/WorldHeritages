@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import me.manulorenzo.worldheritages.data.model.Heritage
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -59,9 +60,22 @@ class RepositoryTest {
         }.whenever(mockAssetsManager).open(any())
         runBlocking {
             val heritageList = sut.fetchHeritagesList()
-            assertTrue(heritageList is Resource.Success<*>)
-            assertTrue(heritageList.data is List<*>)
+            tryCast<Resource.Success<List<Heritage?>?>>(heritageList) {
+                assertTrue(heritageList is Resource.Success<List<Heritage?>?>)
+            }
+            tryCast<List<Heritage?>>(heritageList.data) {
+                assertTrue(heritageList.data is List<Heritage?>)
+            }
             assertTrue(heritageList.data?.size == 1)
+        }
+    }
+
+    /**
+     * Since Kotlin has reified types, we can take advantage of it and test the type of the instance
+     */
+    private inline fun <reified T> tryCast(instance: Any?, block: T.() -> Unit) {
+        if (instance is T) {
+            block(instance)
         }
     }
 }
