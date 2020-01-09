@@ -18,5 +18,5 @@ data class Heritage(
     val image: String, // "http://whc.unesco.org//uploads/thumbs/site_0002_0001-750-0-20061215143310.jpg",
     val imageAuthor: String,
     val shortInfo: String,
-    val longInfo: String
+    val longInfo: String?
 )
