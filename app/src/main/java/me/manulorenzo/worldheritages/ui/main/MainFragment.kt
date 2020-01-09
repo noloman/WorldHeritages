@@ -1,32 +1,41 @@
 package me.manulorenzo.worldheritages.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
 import me.manulorenzo.worldheritages.R
+import me.manulorenzo.worldheritages.data.Resource
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
-    }
+    ): View = inflater.inflate(R.layout.main_fragment, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel.worldHeritagesLiveData.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is Resource.Loading -> {
+                }
+                is Resource.Success -> {
+                    Log.i("manu", it.data.toString())
+                }
+                is Resource.Error -> {
+                    Log.e("manu", it.message)
+                }
+            }
+        })
     }
 
+    companion object {
+        operator fun invoke() = MainFragment()
+    }
 }
