@@ -4,8 +4,11 @@ import android.content.res.AssetManager
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import com.squareup.moshi.JsonDataException
+import junit.framework.Assert.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import me.manulorenzo.worldheritages.data.model.Heritage
@@ -67,6 +70,21 @@ class RepositoryTest {
                 assertTrue(heritageList.data is List<Heritage?>)
             }
             assertTrue(heritageList.data?.size == 1)
+        }
+    }
+
+    @Test
+    fun `given a wrong list of heritages, it should fetch them wrapped in a Result#Error`() {
+        doThrow(JsonDataException::class).whenever(mockAssetsManager).open(any())
+        runBlocking {
+            val heritageList = sut.fetchHeritagesList()
+            tryCast<Resource.Error<List<Heritage?>?>>(heritageList) {
+                assertTrue(heritageList is Resource.Error<List<Heritage?>?>)
+            }
+            tryCast<List<Heritage?>>(heritageList.data) {
+                assertTrue(heritageList.data is List<Heritage?>)
+            }
+            assertNull(heritageList.data)
         }
     }
 
