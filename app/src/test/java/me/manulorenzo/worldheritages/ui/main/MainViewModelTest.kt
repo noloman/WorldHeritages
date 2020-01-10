@@ -82,4 +82,33 @@ class MainViewModelTest : AutoCloseKoinTest() {
                 assertEquals(fakeSuccessResource.data, lastValue.data)
             }
         }
+
+    @Test
+    fun `given an erroneous list of heritages it should first emit loading and then error`() =
+        runBlockingTest {
+            startKoin { modules(repositoryModule) }
+            val errorMessage = "Error"
+            declareMock<Repository> {
+                runBlocking {
+                    doAnswer { Resource.Error<List<Heritage?>?>(errorMessage) }.whenever(this@declareMock)
+                        .fetchHeritagesList()
+                }
+            }
+
+            val observer: Observer<HeritageResponse> = mock()
+
+            val sut =
+                MainViewModel(
+                    coroutinesIoDispatcher = TestCoroutineDispatcher(),
+                    repository = repositoryMock
+                )
+
+            sut.worldHeritagesLiveData.observeForever(observer)
+            sut.worldHeritagesLiveData
+            val captor = argumentCaptor<HeritageResponse>()
+            captor.run {
+                verify(observer, times(2)).onChanged(capture())
+                assertEquals(errorMessage, lastValue.message)
+            }
+        }
 }
