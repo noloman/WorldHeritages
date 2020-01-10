@@ -1,4 +1,4 @@
-package me.manulorenzo.worldheritages.data
+package me.manulorenzo.worldheritages.data.source
 
 import android.content.res.AssetManager
 import com.squareup.moshi.JsonAdapter
@@ -9,11 +9,13 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import me.manulorenzo.worldheritages.data.Resource
 import me.manulorenzo.worldheritages.data.model.Heritage
 import java.io.IOException
 
 typealias HeritageResponse = Resource<List<Heritage?>?>
 
+@Mockable
 class Repository(
     private val assetManager: AssetManager,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -33,7 +35,9 @@ class Repository(
             // TODO Blocking method call?
             val result: List<Heritage>? = adapter.fromJson(data)
             // TODO Error checking
-            Resource.Success<List<Heritage?>?>(result)
+            Resource.Success<List<Heritage?>?>(
+                result
+            )
         } catch (e: JsonDataException) {
             Resource.Error<List<Heritage?>?>("Error")
         } catch (e: IOException) {

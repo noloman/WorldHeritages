@@ -12,6 +12,7 @@ import junit.framework.Assert.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import me.manulorenzo.worldheritages.data.model.Heritage
+import me.manulorenzo.worldheritages.data.source.Repository
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -46,7 +47,9 @@ class RepositoryTest {
 
     @Before
     fun setUp() {
-        sut = Repository(mockAssetsManager)
+        sut = Repository(
+            mockAssetsManager
+        )
     }
 
     /**

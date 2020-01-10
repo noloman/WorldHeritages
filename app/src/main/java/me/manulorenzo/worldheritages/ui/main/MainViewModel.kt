@@ -6,9 +6,9 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import me.manulorenzo.worldheritages.data.HeritageResponse
-import me.manulorenzo.worldheritages.data.Repository
 import me.manulorenzo.worldheritages.data.Resource
+import me.manulorenzo.worldheritages.data.source.HeritageResponse
+import me.manulorenzo.worldheritages.data.source.Repository
 
 class MainViewModel(
     coroutinesIoDispatcher: CoroutineDispatcher = Dispatchers.IO,
