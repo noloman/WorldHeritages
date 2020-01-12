@@ -1,7 +1,6 @@
 package me.manulorenzo.worldheritages.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +9,11 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.main_fragment.heritagesProgressBar
 import kotlinx.android.synthetic.main.main_fragment.heritagesRecyclerView
 import me.manulorenzo.worldheritages.R
-import me.manulorenzo.worldheritages.data.Resource
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
     private val viewModel: MainViewModel by viewModel()
-
+    private val adapter = HeritagesAdapter()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -23,21 +21,13 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        heritagesProgressBar.visibility = View.GONE
+        heritagesRecyclerView.visibility = View.VISIBLE
+
+        heritagesRecyclerView.adapter = adapter
+
         viewModel.worldHeritagesLiveData.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is Resource.Loading -> {
-                    heritagesProgressBar.visibility = View.VISIBLE
-                    heritagesRecyclerView.visibility = View.GONE
-                }
-                is Resource.Success -> {
-                    heritagesProgressBar.visibility = View.GONE
-                    heritagesRecyclerView.visibility = View.VISIBLE
-                    heritagesRecyclerView.adapter = HeritagesAdapter(it.data)
-                }
-                is Resource.Error -> {
-                    Log.e("manu", it.message)
-                }
-            }
+            adapter.submitList(it)
         })
     }
 
