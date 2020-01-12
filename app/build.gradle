@@ -48,7 +48,6 @@ allOpen {
 }
 
 dependencies {
-
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Koin for Kotlin
@@ -99,4 +98,6 @@ dependencies {
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2"
+    // Pagination
+    implementation 'android.arch.paging:runtime:1.0.1'
 }
