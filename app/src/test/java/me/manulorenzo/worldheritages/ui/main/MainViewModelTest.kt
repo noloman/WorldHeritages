@@ -2,24 +2,29 @@ package me.manulorenzo.worldheritages.ui.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import androidx.paging.DataSource
+import androidx.paging.PagedList
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import me.manulorenzo.worldheritages.CoroutinesTestRule
 import me.manulorenzo.worldheritages.Faker
+import me.manulorenzo.worldheritages.MockLimitDataSource
+import me.manulorenzo.worldheritages.createMockDataSourceFactory
 import me.manulorenzo.worldheritages.data.Resource
+import me.manulorenzo.worldheritages.data.db.entity.toModel
 import me.manulorenzo.worldheritages.data.di.repositoryModule
 import me.manulorenzo.worldheritages.data.model.Heritage
-import me.manulorenzo.worldheritages.data.source.HeritageResponse
 import me.manulorenzo.worldheritages.data.source.Repository
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.koin.core.context.startKoin
@@ -36,61 +41,59 @@ class MainViewModelTest : AutoCloseKoinTest() {
     val coroutineTestRule = CoroutinesTestRule()
 
     @Test
-    fun `given a fake of a list of heritages it should first emit loading and then success`() =
+    fun `given a fake of a list of heritages it should emit a PagedList whose dataSource is the fake list`() =
         runBlockingTest {
-            val fakeSuccessResource =
-                Resource.Success(Faker.fakeHeritageEntityList)
+            val fakeItemList: List<Heritage> = Faker.fakeHeritageEntityList.map { it.toModel() }
+            val mockedDataSource = createMockDataSourceFactory(fakeItemList)
+            val fakeSuccessResource: Resource.Success<DataSource.Factory<Int, Heritage>> =
+                Resource.Success(mockedDataSource)
             startKoin { modules(repositoryModule) }
             declareMock<Repository> {
                 runBlocking {
-                    doAnswer { fakeSuccessResource }.whenever(this@declareMock).fetchHeritagesList()
+                    whenever(this@declareMock.fetchHeritagesList()).doReturn(fakeSuccessResource)
                 }
             }
 
-            val observer: Observer<HeritageResponse> = mock()
+            val observer: Observer<PagedList<Heritage>?> = mock()
 
-            val sut =
-                MainViewModel(
-                    coroutinesIoDispatcher = TestCoroutineDispatcher(),
-                    repository = repositoryMock
-                )
+            val sut = MainViewModel(repository = repositoryMock)
 
-            sut.worldHeritagesLiveData.observeForever(observer)
+            sut.worldHeritagesLiveData?.observeForever(observer)
             sut.worldHeritagesLiveData
 
-            val captor = argumentCaptor<HeritageResponse>()
+            val captor = argumentCaptor<PagedList<Heritage>>()
             captor.run {
-                verify(observer, times(2)).onChanged(capture())
-                assertEquals(fakeSuccessResource.data, lastValue.data)
+                verify(observer).onChanged(capture())
+                assertTrue(lastValue.dataSource is MockLimitDataSource)
+                assertTrue((lastValue.dataSource as MockLimitDataSource).itemList == fakeItemList)
             }
         }
 
     @Test
-    fun `given an erroneous list of heritages it should first emit loading and then error`() =
+    fun `given an erroneous list of heritages it should emit a null value`() =
         runBlockingTest {
             startKoin { modules(repositoryModule) }
             val errorMessage = "Error"
             declareMock<Repository> {
                 runBlocking {
-                    doAnswer { Resource.Error<List<Heritage?>?>(errorMessage) }.whenever(this@declareMock)
+                    doAnswer { Resource.Error<String>(errorMessage) }.whenever(this@declareMock)
                         .fetchHeritagesList()
                 }
             }
 
-            val observer: Observer<HeritageResponse> = mock()
+            val observer: Observer<PagedList<Heritage>?> = mock()
 
             val sut =
                 MainViewModel(
-                    coroutinesIoDispatcher = TestCoroutineDispatcher(),
                     repository = repositoryMock
                 )
 
-            sut.worldHeritagesLiveData.observeForever(observer)
+            sut.worldHeritagesLiveData?.observeForever(observer)
             sut.worldHeritagesLiveData
-            val captor = argumentCaptor<HeritageResponse>()
+            val captor = argumentCaptor<PagedList<Heritage>>()
             captor.run {
-                verify(observer, times(2)).onChanged(capture())
-                assertEquals(errorMessage, lastValue.message)
+                verify(observer, never()).onChanged(capture())
             }
+            assertNull(sut.worldHeritagesLiveData)
         }
 }

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.main_fragment.heritagesProgressBar
 import kotlinx.android.synthetic.main.main_fragment.heritagesRecyclerView
 import me.manulorenzo.worldheritages.R
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -21,14 +20,11 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        heritagesProgressBar.visibility = View.GONE
-        heritagesRecyclerView.visibility = View.VISIBLE
-
         heritagesRecyclerView.adapter = adapter
-
-        viewModel.worldHeritagesLiveData.observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
-        })
+        viewModel.worldHeritagesLiveData?.observe(
+            viewLifecycleOwner,
+            Observer(adapter::submitList)
+        )
     }
 
     companion object {

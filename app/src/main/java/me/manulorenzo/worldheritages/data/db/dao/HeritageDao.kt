@@ -9,11 +9,11 @@ import me.manulorenzo.worldheritages.data.db.entity.HeritageEntity
 @Dao
 interface HeritageDao {
     @Insert
-    suspend fun insertAll(heritageEntityList: List<HeritageEntity>)
+    fun insertAll(heritageEntityList: List<HeritageEntity>)
 
     @Query("SELECT * from heritages_table")
     fun getHeritageEntityDataSource(): DataSource.Factory<Int, HeritageEntity>
 
     @Query("SELECT COUNT(*) FROM heritages_table")
-    suspend fun numberHeritagesInDb(): Long
+    fun numberHeritagesInDb(): Long
 }
