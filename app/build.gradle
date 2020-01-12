@@ -67,7 +67,11 @@ dependencies {
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0-rc03'
-
+    // Room components
+    implementation "androidx.room:room-runtime:2.2.3"
+    implementation "androidx.room:room-ktx:2.2.3"
+    kapt "androidx.room:room-compiler:2.2.3"
+    androidTestImplementation "androidx.room:room-testing:2.2.3"
     // ViewModel Kotlin support
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-rc03"

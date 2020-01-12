@@ -1,20 +1,16 @@
 package me.manulorenzo.worldheritages.data.di
 
-import me.manulorenzo.worldheritages.WorldHeritagesApplication
+import me.manulorenzo.worldheritages.data.ParserManager
 import me.manulorenzo.worldheritages.data.source.Repository
-import org.koin.core.module.Module
 import org.koin.dsl.module
 
 val repositoryModule = module {
     single {
         Repository(
-            assetManager = get()
+            parserManager = get(),
+            heritageDao = get()
         )
     }
 }
 
-fun assetManagerModule(worldHeritagesApplication: WorldHeritagesApplication): Module = module {
-    single {
-        worldHeritagesApplication.assets
-    }
-}
+val parserManagerModule = module { single { ParserManager(assetsManager = get()) } }

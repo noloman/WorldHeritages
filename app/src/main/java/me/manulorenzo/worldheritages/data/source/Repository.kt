@@ -1,15 +1,13 @@
 package me.manulorenzo.worldheritages.data.source
 
-import android.content.res.AssetManager
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonDataException
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import me.manulorenzo.worldheritages.data.ParserManager
 import me.manulorenzo.worldheritages.data.Resource
+import me.manulorenzo.worldheritages.data.db.dao.HeritageDao
+import me.manulorenzo.worldheritages.data.db.entity.toModel
 import me.manulorenzo.worldheritages.data.model.Heritage
 import java.io.IOException
 
@@ -17,31 +15,23 @@ typealias HeritageResponse = Resource<List<Heritage?>?>
 
 @Mockable
 class Repository(
-    private val assetManager: AssetManager,
+    private val parserManager: ParserManager,
+    private val heritageDao: HeritageDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     suspend fun fetchHeritagesList(): HeritageResponse = withContext(ioDispatcher) {
         try {
-            // TODO Blocking method call?
-            val bufferReader = assetManager.open("heritages.json").bufferedReader()
-            val data = bufferReader.use {
-                it.readText()
-            }
-            val moshi = Moshi.Builder()
-                .add(KotlinJsonAdapterFactory())
-                .build()
-            val listType = Types.newParameterizedType(List::class.java, Heritage::class.java)
-            val adapter: JsonAdapter<List<Heritage>> = moshi.adapter(listType)
-            // TODO Blocking method call?
-            val result: List<Heritage>? = adapter.fromJson(data)
-            // TODO Error checking
-            Resource.Success<List<Heritage?>?>(
-                result
-            )
+            val number = heritageDao.numberHeritagesInDb()
+            if (number == 0L) heritageDao.insertAll(parserManager.parseAssetsToEntityList())
+            Resource.Success<List<Heritage?>?>(heritageDao.getHeritages().map { it.toModel() })
         } catch (e: JsonDataException) {
-            Resource.Error<List<Heritage?>?>("Error")
+            Resource.Error<List<Heritage?>?>(DEFAULT_ERROR_MSG)
         } catch (e: IOException) {
-            Resource.Error<List<Heritage?>?>("Error")
+            Resource.Error<List<Heritage?>?>(DEFAULT_ERROR_MSG)
         }
+    }
+
+    companion object {
+        const val DEFAULT_ERROR_MSG = "Error"
     }
 }

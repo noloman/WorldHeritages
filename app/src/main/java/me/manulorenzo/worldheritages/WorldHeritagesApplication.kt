@@ -3,6 +3,8 @@ package me.manulorenzo.worldheritages
 import android.app.Application
 import android.os.StrictMode
 import me.manulorenzo.worldheritages.data.di.assetManagerModule
+import me.manulorenzo.worldheritages.data.di.databaseModule
+import me.manulorenzo.worldheritages.data.di.parserManagerModule
 import me.manulorenzo.worldheritages.data.di.repositoryModule
 import me.manulorenzo.worldheritages.ui.main.di.mainViewModelModule
 import me.manulorenzo.worldheritages.ui.main.viewModuleFactoryModule
@@ -33,6 +35,8 @@ class WorldHeritagesApplication : Application() {
                     repositoryModule,
                     mainViewModelModule,
                     viewModuleFactoryModule,
+                    parserManagerModule,
+                    databaseModule,
                     assetManagerModule(this@WorldHeritagesApplication)
                 )
             )

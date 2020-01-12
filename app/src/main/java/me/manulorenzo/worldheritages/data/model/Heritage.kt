@@ -1,6 +1,7 @@
 package me.manulorenzo.worldheritages.data.model
 
 import com.squareup.moshi.JsonClass
+import me.manulorenzo.worldheritages.data.db.entity.HeritageEntity
 
 @JsonClass(generateAdapter = true)
 data class Heritage(
@@ -19,4 +20,21 @@ data class Heritage(
     val imageAuthor: String,
     val shortInfo: String,
     val longInfo: String?
+)
+
+fun Heritage.toEntity() = HeritageEntity(
+    jsonId = id,
+    year = year,
+    target = target,
+    name = name,
+    type = type,
+    region = region,
+    regionLong = regionLong,
+    lat = lat,
+    lng = lng,
+    page = page,
+    image = image,
+    imageAuthor = imageAuthor,
+    shortInfo = shortInfo,
+    longInfo = longInfo
 )
