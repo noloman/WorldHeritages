@@ -43,7 +43,7 @@ class RepositoryTest {
     @Test
     fun `given a list of heritages, it should fetch them wrapped in a Result#Success`() =
         runBlocking {
-            whenever(mockHeritageDao.getHeritages()).thenReturn(Faker.fakeHeritageEntityList)
+            whenever(mockHeritageDao.getHeritageList()).thenReturn(Faker.fakeHeritageEntityList)
             val heritageList = sut.fetchHeritagesList()
             tryCast<Resource.Success<List<Heritage?>?>>(heritageList) {
                 assertTrue(heritageList is Resource.Success<List<Heritage?>?>)
@@ -57,7 +57,7 @@ class RepositoryTest {
     @Test
     fun `given a wrong list of heritages, it should fetch them wrapped in a Result#Error`() {
         runBlocking {
-            whenever(mockHeritageDao.getHeritages()).doThrow(JsonDataException::class)
+            whenever(mockHeritageDao.getHeritageList()).doThrow(JsonDataException::class)
             val heritageList = sut.fetchHeritagesList()
             tryCast<Resource.Error<List<Heritage?>?>>(heritageList) {
                 assertTrue(heritageList is Resource.Error<List<Heritage?>?>)

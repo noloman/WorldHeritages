@@ -11,7 +11,7 @@ interface HeritageDao {
     suspend fun insertAll(heritageEntityList: List<HeritageEntity>)
 
     @Query("SELECT * from heritages_table")
-    suspend fun getHeritages(): List<HeritageEntity>
+    suspend fun getHeritageList(): List<HeritageEntity>
 
     @Query("SELECT COUNT(*) FROM heritages_table")
     fun numberHeritagesInDb(): Long

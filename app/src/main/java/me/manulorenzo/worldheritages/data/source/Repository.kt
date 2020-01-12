@@ -23,7 +23,7 @@ class Repository(
         try {
             val number = heritageDao.numberHeritagesInDb()
             if (number == 0L) heritageDao.insertAll(parserManager.parseAssetsToEntityList())
-            Resource.Success<List<Heritage?>?>(heritageDao.getHeritages().map { it.toModel() })
+            Resource.Success<List<Heritage?>?>(heritageDao.getHeritageList().map { it.toModel() })
         } catch (e: JsonDataException) {
             Resource.Error<List<Heritage?>?>(DEFAULT_ERROR_MSG)
         } catch (e: IOException) {
