@@ -2,12 +2,18 @@ package me.manulorenzo.worldheritages
 
 import android.database.Cursor
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import androidx.room.RoomDatabase
 import androidx.room.RoomSQLiteQuery
 import androidx.room.paging.LimitOffsetDataSource
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /**
  * Since Kotlin has reified types, we can take advantage of it and test the type of the instance
@@ -16,11 +22,39 @@ inline fun <reified T> tryCast(instance: Any?, block: T.() -> Unit) {
     if (instance is T) block(instance)
 }
 
-private val mockedQuery = mock<RoomSQLiteQuery> {
+fun <T> List<T>.asPagedList(config: PagedList.Config? = null): PagedList<T>? {
+    val defaultConfig = PagedList.Config.Builder()
+        .setEnablePlaceholders(false)
+        .setPageSize(size)
+        .setMaxSize(size + 2)
+        .setPrefetchDistance(1)
+        .build()
+    return LivePagedListBuilder<Int, T>(
+        createMockDataSourceFactory(this),
+        config ?: defaultConfig
+    ).build().blockingObserve()
+}
+
+fun <T> LiveData<T>.blockingObserve(): T? {
+    var value: T? = null
+    val latch = CountDownLatch(1)
+
+    val observer = Observer<T> { t ->
+        value = t
+        latch.countDown()
+    }
+
+    observeForever(observer)
+
+    latch.await(2, TimeUnit.SECONDS)
+    return value
+}
+
+private val mockedQuery: RoomSQLiteQuery = mock {
     on { sql } doReturn ""
 }
 
-private val mockedDb = mock<RoomDatabase> {
+private val mockedDb: RoomDatabase = mock {
     on { invalidationTracker } doReturn mock()
 }
 
