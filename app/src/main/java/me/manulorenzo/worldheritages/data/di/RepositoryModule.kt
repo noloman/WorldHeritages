@@ -12,5 +12,4 @@ val repositoryModule = module {
         )
     }
 }
-
 val parserManagerModule = module { single { ParserManager(assetsManager = get()) } }

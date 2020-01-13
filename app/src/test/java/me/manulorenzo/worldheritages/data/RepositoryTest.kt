@@ -1,6 +1,8 @@
 package me.manulorenzo.worldheritages.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.DataSource
+import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -9,10 +11,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import me.manulorenzo.worldheritages.Faker
+import me.manulorenzo.worldheritages.createMockDataSourceFactory
 import me.manulorenzo.worldheritages.data.db.dao.HeritageDao
 import me.manulorenzo.worldheritages.data.model.Heritage
 import me.manulorenzo.worldheritages.data.source.Repository
+import me.manulorenzo.worldheritages.data.source.Repository.Companion.DEFAULT_ERROR_MESSAGE
 import me.manulorenzo.worldheritages.tryCast
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -43,27 +48,25 @@ class RepositoryTest {
     @Test
     fun `given a list of heritages, it should fetch them wrapped in a Result#Success`() =
         runBlocking {
-            whenever(mockHeritageDao.getHeritageList()).thenReturn(Faker.fakeHeritageEntityList)
+            doAnswer { createMockDataSourceFactory(Faker.fakeHeritageEntityList) }
+                .whenever(mockHeritageDao).getHeritageEntityDataSource()
             val heritageList = sut.fetchHeritagesList()
-            tryCast<Resource.Success<List<Heritage?>?>>(heritageList) {
-                assertTrue(heritageList is Resource.Success<List<Heritage?>?>)
+            tryCast<Resource.Success<DataSource.Factory<Int, Heritage>>>(heritageList) {
+                assertTrue(heritageList is Resource.Success<DataSource.Factory<Int, Heritage>>)
             }
-            tryCast<List<Heritage?>>(heritageList.data) {
-                assertTrue(heritageList.data is List<Heritage?>)
+            tryCast<DataSource.Factory<Int, Heritage>>(heritageList.data) {
+                assertTrue(heritageList.data is DataSource.Factory<Int, Heritage>)
             }
-            assertTrue(heritageList.data?.size == 1)
         }
 
     @Test
     fun `given a wrong list of heritages, it should fetch them wrapped in a Result#Error`() {
         runBlocking {
-            whenever(mockHeritageDao.getHeritageList()).doThrow(JsonDataException::class)
+            whenever(mockHeritageDao.getHeritageEntityDataSource()).doThrow(JsonDataException::class)
             val heritageList = sut.fetchHeritagesList()
-            tryCast<Resource.Error<List<Heritage?>?>>(heritageList) {
-                assertTrue(heritageList is Resource.Error<List<Heritage?>?>)
-            }
-            tryCast<List<Heritage?>>(heritageList.data) {
-                assertTrue(heritageList.data is List<Heritage?>)
+            tryCast<Resource.Error<String>>(heritageList) {
+                assertTrue(heritageList is Resource.Error)
+                assertEquals(DEFAULT_ERROR_MESSAGE, heritageList.message)
             }
             assertNull(heritageList.data)
         }

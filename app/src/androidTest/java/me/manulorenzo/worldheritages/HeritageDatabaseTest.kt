@@ -61,7 +61,7 @@ class HeritageDatabaseTest {
                 )
             )
             heritageDao.insertAll(expectedHeritageEntityList)
-            val heritageEntityList = heritageDao.getHeritageList()
+            val heritageEntityList = heritageDao.getHeritageEntityDataSource()
             assertEquals(expectedHeritageEntityList, heritageEntityList)
         }
     }
