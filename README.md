@@ -1,7 +1,12 @@
 # WorldHeritages
 Android app for helping people discover World Heritageso around the planet.
 
-This app uses, among others: Koin, Coil, Android Jetpack Paging Library and Room.
+This app uses, among others libraries: 
+
+- Koin
+- Coil
+- Android Jetpack Paging Library
+- Room
 
 ## TODOs:
 
