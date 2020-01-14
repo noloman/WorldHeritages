@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.runBlocking
 import me.manulorenzo.worldheritages.Faker
+import me.manulorenzo.worldheritages.domain.ParserManager
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -38,7 +39,8 @@ class ParserManagerTest {
 
     @Before
     fun setUp() {
-        sut = ParserManager(assetsManager = mockAssetManager)
+        sut =
+            ParserManager(assetsManager = mockAssetManager)
     }
 
     @Test

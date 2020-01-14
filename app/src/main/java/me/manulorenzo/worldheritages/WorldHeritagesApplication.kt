@@ -2,10 +2,10 @@ package me.manulorenzo.worldheritages
 
 import android.app.Application
 import android.os.StrictMode
-import me.manulorenzo.worldheritages.data.di.assetManagerModule
 import me.manulorenzo.worldheritages.data.di.databaseModule
-import me.manulorenzo.worldheritages.data.di.parserManagerModule
-import me.manulorenzo.worldheritages.data.di.repositoryModule
+import me.manulorenzo.worldheritages.di.assetManagerModule
+import me.manulorenzo.worldheritages.domain.di.parserManagerModule
+import me.manulorenzo.worldheritages.domain.di.repositoryModule
 import me.manulorenzo.worldheritages.ui.main.di.coroutineScopeModule
 import me.manulorenzo.worldheritages.ui.main.di.mainViewModelModule
 import me.manulorenzo.worldheritages.ui.main.di.viewModuleFactoryModule

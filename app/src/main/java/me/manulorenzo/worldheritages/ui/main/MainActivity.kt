@@ -1,8 +1,8 @@
-package me.manulorenzo.worldheritages
+package me.manulorenzo.worldheritages.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import me.manulorenzo.worldheritages.ui.main.MainFragment
+import me.manulorenzo.worldheritages.R
 
 class MainActivity : AppCompatActivity() {
 

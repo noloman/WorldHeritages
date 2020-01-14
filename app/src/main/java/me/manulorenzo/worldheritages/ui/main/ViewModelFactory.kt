@@ -2,7 +2,7 @@ package me.manulorenzo.worldheritages.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import me.manulorenzo.worldheritages.data.source.Repository
+import me.manulorenzo.worldheritages.domain.repository.Repository
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(

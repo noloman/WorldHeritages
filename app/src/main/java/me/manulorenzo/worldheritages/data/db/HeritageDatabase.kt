@@ -10,8 +10,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.manulorenzo.worldheritages.data.db.dao.HeritageDao
-import me.manulorenzo.worldheritages.data.db.entity.HeritageEntity
-import me.manulorenzo.worldheritages.data.source.Repository
+import me.manulorenzo.worldheritages.data.model.HeritageEntity
+import me.manulorenzo.worldheritages.domain.repository.Repository
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

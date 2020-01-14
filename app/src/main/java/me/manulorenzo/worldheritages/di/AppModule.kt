@@ -1,4 +1,4 @@
-package me.manulorenzo.worldheritages.data.di
+package me.manulorenzo.worldheritages.di
 
 import me.manulorenzo.worldheritages.WorldHeritagesApplication
 import org.koin.core.module.Module

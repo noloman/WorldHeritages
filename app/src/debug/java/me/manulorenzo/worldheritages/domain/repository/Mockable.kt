@@ -1,4 +1,4 @@
-package me.manulorenzo.worldheritages.data.source
+package me.manulorenzo.worldheritages.domain.repository
 
 /**
  * This annotation allows us to open some classes for mocking purposes while they are final in

@@ -55,7 +55,7 @@ android {
 }
 
 allOpen {
-    annotation("me.manulorenzo.worldheritages.data.source.Mockable")
+    annotation("me.manulorenzo.worldheritages.domain.source.Mockable")
 }
 
 dependencies {

@@ -1,7 +1,8 @@
-package me.manulorenzo.worldheritages.data.source
+package me.manulorenzo.worldheritages.domain
 
 import androidx.paging.PagedList
-import me.manulorenzo.worldheritages.data.model.Heritage
+import me.manulorenzo.worldheritages.domain.model.Heritage
+import me.manulorenzo.worldheritages.domain.repository.Repository
 
 class HeritageBoundaryCallback(
     private val repository: Repository

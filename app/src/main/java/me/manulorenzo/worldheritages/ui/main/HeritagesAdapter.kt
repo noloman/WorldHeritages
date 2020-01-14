@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.heritage_item_row.view.heritageImage
 import kotlinx.android.synthetic.main.heritage_item_row.view.heritageName
 import kotlinx.android.synthetic.main.heritage_item_row.view.heritageShortInfo
 import me.manulorenzo.worldheritages.R
-import me.manulorenzo.worldheritages.data.model.Heritage
+import me.manulorenzo.worldheritages.domain.model.Heritage
 
 class HeritagesAdapter :
     PagedListAdapter<Heritage, HeritagesAdapter.HeritagesViewHolder>(HERITAGE_COMPARATOR) {

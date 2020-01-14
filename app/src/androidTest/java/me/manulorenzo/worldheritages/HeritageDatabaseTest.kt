@@ -8,7 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import me.manulorenzo.worldheritages.data.db.HeritageDatabase
 import me.manulorenzo.worldheritages.data.db.dao.HeritageDao
-import me.manulorenzo.worldheritages.data.db.entity.HeritageEntity
+import me.manulorenzo.worldheritages.data.model.HeritageEntity
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before

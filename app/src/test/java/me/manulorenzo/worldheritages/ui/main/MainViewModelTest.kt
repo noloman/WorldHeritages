@@ -18,11 +18,11 @@ import me.manulorenzo.worldheritages.CoroutinesTestRule
 import me.manulorenzo.worldheritages.Faker
 import me.manulorenzo.worldheritages.MockLimitDataSource
 import me.manulorenzo.worldheritages.createMockDataSourceFactory
-import me.manulorenzo.worldheritages.data.Resource
-import me.manulorenzo.worldheritages.data.db.entity.toModel
-import me.manulorenzo.worldheritages.data.di.repositoryModule
-import me.manulorenzo.worldheritages.data.model.Heritage
-import me.manulorenzo.worldheritages.data.source.Repository
+import me.manulorenzo.worldheritages.data.model.toModel
+import me.manulorenzo.worldheritages.domain.di.repositoryModule
+import me.manulorenzo.worldheritages.domain.model.Heritage
+import me.manulorenzo.worldheritages.domain.model.Resource
+import me.manulorenzo.worldheritages.domain.repository.Repository
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue

@@ -1,4 +1,4 @@
-package me.manulorenzo.worldheritages.data
+package me.manulorenzo.worldheritages.domain.model
 
 /**
  * Sealed to help encapsulate the data modeling it with the different states it can have.

@@ -4,7 +4,7 @@ import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import me.manulorenzo.worldheritages.data.db.entity.HeritageEntity
+import me.manulorenzo.worldheritages.data.model.HeritageEntity
 
 @Dao
 interface HeritageDao {

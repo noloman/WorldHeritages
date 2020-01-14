@@ -13,9 +13,11 @@ import kotlinx.coroutines.test.runBlockingTest
 import me.manulorenzo.worldheritages.Faker
 import me.manulorenzo.worldheritages.createMockDataSourceFactory
 import me.manulorenzo.worldheritages.data.db.dao.HeritageDao
-import me.manulorenzo.worldheritages.data.model.Heritage
-import me.manulorenzo.worldheritages.data.source.Repository
-import me.manulorenzo.worldheritages.data.source.Repository.Companion.DEFAULT_ERROR_MESSAGE
+import me.manulorenzo.worldheritages.domain.ParserManager
+import me.manulorenzo.worldheritages.domain.model.Heritage
+import me.manulorenzo.worldheritages.domain.model.Resource
+import me.manulorenzo.worldheritages.domain.repository.Repository
+import me.manulorenzo.worldheritages.domain.repository.Repository.Companion.DEFAULT_ERROR_MESSAGE
 import me.manulorenzo.worldheritages.tryCast
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull

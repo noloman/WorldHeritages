@@ -1,12 +1,12 @@
-package me.manulorenzo.worldheritages.data.source
+package me.manulorenzo.worldheritages.domain.repository
 
 import androidx.paging.DataSource
 import com.squareup.moshi.JsonDataException
-import me.manulorenzo.worldheritages.data.ParserManager
-import me.manulorenzo.worldheritages.data.Resource
 import me.manulorenzo.worldheritages.data.db.dao.HeritageDao
-import me.manulorenzo.worldheritages.data.db.entity.toModel
-import me.manulorenzo.worldheritages.data.model.Heritage
+import me.manulorenzo.worldheritages.data.model.toModel
+import me.manulorenzo.worldheritages.domain.ParserManager
+import me.manulorenzo.worldheritages.domain.model.Heritage
+import me.manulorenzo.worldheritages.domain.model.Resource
 import java.io.IOException
 
 @Mockable

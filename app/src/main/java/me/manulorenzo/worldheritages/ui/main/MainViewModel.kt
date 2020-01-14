@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import me.manulorenzo.worldheritages.data.Resource
-import me.manulorenzo.worldheritages.data.model.Heritage
-import me.manulorenzo.worldheritages.data.source.HeritageBoundaryCallback
-import me.manulorenzo.worldheritages.data.source.Repository
+import me.manulorenzo.worldheritages.domain.HeritageBoundaryCallback
+import me.manulorenzo.worldheritages.domain.model.Heritage
+import me.manulorenzo.worldheritages.domain.model.Resource
+import me.manulorenzo.worldheritages.domain.repository.Repository
 
 class MainViewModel(repository: Repository) : ViewModel() {
     val errorPagedList = MutableLiveData<Boolean>()

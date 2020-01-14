@@ -1,6 +1,6 @@
 package me.manulorenzo.worldheritages
 
-import me.manulorenzo.worldheritages.data.db.entity.HeritageEntity
+import me.manulorenzo.worldheritages.data.model.HeritageEntity
 
 object Faker {
     val fakeHeritageEntityList: List<HeritageEntity>

@@ -1,8 +1,8 @@
-package me.manulorenzo.worldheritages.data.db.entity
+package me.manulorenzo.worldheritages.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import me.manulorenzo.worldheritages.data.model.Heritage
+import me.manulorenzo.worldheritages.domain.model.Heritage
 
 @Entity(tableName = "heritages_table")
 data class HeritageEntity(
