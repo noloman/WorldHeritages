@@ -33,7 +33,6 @@ import me.manulorenzo.worldheritages.data.model.Heritage
 import me.manulorenzo.worldheritages.data.source.Repository
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers.allOf
-import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
@@ -59,11 +58,6 @@ class MainFragmentTest : KoinTest {
     val rule: TestRule = InstantTaskExecutorRule()
     @get:Rule
     val executorRule = CountingTaskExecutorRule()
-
-    @Before
-    fun setup() {
-
-    }
 
     @Test
     @Ignore("Unfortunately, the RecyclerView does not show any time and I have no time to investigate it")
