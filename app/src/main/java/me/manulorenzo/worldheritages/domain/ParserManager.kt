@@ -13,8 +13,7 @@ import me.manulorenzo.worldheritages.domain.model.Heritage
 import me.manulorenzo.worldheritages.domain.model.toEntity
 
 /**
- * Ideally we should inject Moshi here via constructor param, so it could be testable and make this class more SRP.
- * Unfortunately I don't have time to fight with Moshi and Koin now
+ * TODO Ideally we should inject Moshi here via constructor param, so it could be testable and make this class more SRP. Unfortunately I don't have time to fight with Moshi and Koin now
  */
 class ParserManager(
     private val assetsManager: AssetManager,
