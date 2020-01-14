@@ -10,6 +10,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
@@ -61,6 +62,12 @@ class MainFragmentTest : KoinTest {
 
     @Before
     fun setup() {
+
+    }
+
+    @Test
+    @Ignore("Unfortunately, the RecyclerView does not show any time and I have no time to investigate it")
+    fun givenAListOfHeritagesWithOneItem_shouldShowItInTheRecyclerView() = runBlockingTest {
         val fakeItemList: List<Heritage> = Faker.fakeHeritageEntityList.map { it.toModel() }
         val mockedDataSource: DataSource.Factory<Int, Heritage> =
             createMockDataSourceFactory(fakeItemList)
@@ -72,6 +79,7 @@ class MainFragmentTest : KoinTest {
                     doAnswer {
                         MutableLiveData<PagedList<Heritage>>().apply { postValue(fakeItemList.asPagedList()) }
                     }.whenever(mock).worldHeritagesLiveData
+                    doAnswer { MutableLiveData<Boolean>(true) }.whenever(mock).errorPagedList
                 }
             }
         }
@@ -95,11 +103,7 @@ class MainFragmentTest : KoinTest {
                 )
             )
         }
-    }
 
-    @Test
-    @Ignore("Unfortunately, the RecyclerView does not show any time and I have no time to investigate it")
-    fun givenAListOfHeritagesWithOneItem_shouldShowItInTheRecyclerView() = runBlockingTest {
         testRule.launchActivity(null)
         waitForAdapterChangeWithPagination(
             testRule.activity.findViewById(R.id.heritagesRecyclerView),
@@ -112,6 +116,50 @@ class MainFragmentTest : KoinTest {
                 isDisplayed()
             )
         ).check(matches(EspressoMatchers.hasItemCount(1)))
+    }
+
+    @Test
+    fun givenAListWithAnError_shouldShowNotFoundImageView() {
+        val fakeError: Resource.Error<DataSource.Factory<Int, Heritage>> =
+            Resource.Error("Error")
+        val mockedMainViewModelModule = module {
+            factory(override = true) {
+                mock<MainViewModel> {
+                    doAnswer { MutableLiveData<Boolean>(true) }.whenever(mock).errorPagedList
+                }
+            }
+        }
+        val mockedRepositoryModule = module {
+            factory(override = true) {
+                mock<Repository> {
+                    onBlocking { fetchHeritagesList() } doAnswer {
+                        fakeError
+                    }
+                }
+            }
+        }
+        if (GlobalContext.getOrNull() != null) {
+            stopKoin()
+        }
+        startKoin {
+            loadKoinModules(
+                listOf(
+                    mockedRepositoryModule,
+                    mockedMainViewModelModule
+                )
+            )
+        }
+
+        testRule.launchActivity(null)
+
+        onView(withId(R.id.errorImage)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        onView(withId(R.id.heritagesRecyclerView)).check(
+            matches(
+                withEffectiveVisibility(
+                    ViewMatchers.Visibility.VISIBLE
+                )
+            )
+        )
     }
 
     /**

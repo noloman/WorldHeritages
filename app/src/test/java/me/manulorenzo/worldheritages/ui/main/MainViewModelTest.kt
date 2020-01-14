@@ -23,6 +23,7 @@ import me.manulorenzo.worldheritages.data.db.entity.toModel
 import me.manulorenzo.worldheritages.data.di.repositoryModule
 import me.manulorenzo.worldheritages.data.model.Heritage
 import me.manulorenzo.worldheritages.data.source.Repository
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -67,6 +68,36 @@ class MainViewModelTest : AutoCloseKoinTest() {
                 assertTrue(lastValue.dataSource is MockLimitDataSource)
                 assertTrue((lastValue.dataSource as MockLimitDataSource).itemList == fakeItemList)
             }
+        }
+
+    @Test
+    fun `given an erroneous response from the repository errorPagedList LiveData should return true`() =
+        runBlockingTest {
+            startKoin { modules(repositoryModule) }
+            val errorMessage = "Error"
+            declareMock<Repository> {
+                runBlocking {
+                    doAnswer { Resource.Error<String>(errorMessage) }.whenever(this@declareMock)
+                        .fetchHeritagesList()
+                }
+            }
+
+            val errorObserver: Observer<Boolean> = mock()
+
+            val sut =
+                MainViewModel(
+                    repository = repositoryMock
+                )
+
+            sut.errorPagedList.observeForever(errorObserver)
+            sut.worldHeritagesLiveData
+            val captor = argumentCaptor<Boolean>()
+            captor.run {
+                verify(errorObserver).onChanged(capture())
+                assertNotNull(sut.errorPagedList.value)
+                assertTrue(sut.errorPagedList.value!!)
+            }
+            assertNull(sut.worldHeritagesLiveData)
         }
 
     @Test

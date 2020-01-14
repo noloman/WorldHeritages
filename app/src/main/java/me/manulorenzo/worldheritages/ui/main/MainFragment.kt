@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.main_fragment.errorImage
 import kotlinx.android.synthetic.main.main_fragment.heritagesRecyclerView
 import me.manulorenzo.worldheritages.R
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -25,6 +26,17 @@ class MainFragment : Fragment() {
             viewLifecycleOwner,
             Observer(adapter::submitList)
         )
+        viewModel.errorPagedList.observe(viewLifecycleOwner, Observer(::changeVisibility))
+    }
+
+    private fun changeVisibility(isEmpty: Boolean) {
+        if (isEmpty) {
+            heritagesRecyclerView.visibility = View.GONE
+            errorImage.visibility = View.VISIBLE
+        } else {
+            heritagesRecyclerView.visibility = View.VISIBLE
+            errorImage.visibility = View.GONE
+        }
     }
 
     companion object {
