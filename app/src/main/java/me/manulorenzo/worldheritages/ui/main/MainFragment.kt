@@ -13,7 +13,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
     private val viewModel: MainViewModel by viewModel()
-    private val adapter = HeritagesAdapter()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,6 +20,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = HeritagesAdapter()
         heritagesRecyclerView.adapter = adapter
         viewModel.worldHeritagesLiveData?.observe(
             viewLifecycleOwner,
