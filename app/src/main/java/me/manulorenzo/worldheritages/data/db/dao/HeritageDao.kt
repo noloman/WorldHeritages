@@ -13,7 +13,4 @@ interface HeritageDao {
 
     @Query("SELECT * from heritages_table")
     fun getHeritageEntityDataSource(): DataSource.Factory<Int, HeritageEntity>
-
-    @Query("SELECT COUNT(*) FROM heritages_table")
-    fun numberHeritagesInDb(): Long
 }
